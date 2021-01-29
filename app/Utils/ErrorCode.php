@@ -19,7 +19,7 @@ class ErrorCode
     const NO_PARAM_VALIDATE = ['code' => 'NO_PARAM_VALIDATE', 'message' => '缺少参数'];
     const UNAUTHORIZED = ['code' => 'UNAUTHORIZED', 'message' => '非法操作'];
     const MSG_EXISTS = ['code'=>'MSG_EXISTS','message'=>'已经通知了'];
-    const SAME_USER = ['code'=>'SAME_USER','message'=>'这只你发送的欠条，点击无效'];
+    const SAME_USER = ['code'=>'SAME_USER','message'=>'这是你发送的欠条，点击无效'];
     const READY_JOIN = ['code'=>'READY_JOIN','message'=>'你已经加入'];
     const LOU_IS_EXITS = ['code'=>'LOU_IS_EXITS','message'=>'该欠条不存在'];
     const NO_MSG = ['code'=>'NO_MSG','message'=>'没有这条消息'];
