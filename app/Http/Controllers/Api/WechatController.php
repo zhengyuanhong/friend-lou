@@ -34,6 +34,7 @@ class WechatController extends Controller
         if (empty($user)) {
             $user = new WechatUser();
             $user->openid = $res['openid'];
+            $user->name = '';
             $user->save();
             Log::info('创建user数据');
         }
