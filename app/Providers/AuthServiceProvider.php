@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Model\Lou;
+use App\Policies\LouPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 

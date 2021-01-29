@@ -1,18 +1,38 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::prefix('v1')->namespace('Api')->group(function () {
+    Route::put('login', 'WechatController@login');
+    Route::post('refresh-token', 'WechatController@refreshToken');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::middleware('api-check')->group(function () {
+        //提交用户信息
+        Route::put('user_info', 'WechatController@putUserInfo');
+        //设置用户信息
+        Route::put('set_user_info', 'WechatController@setUserInfo');
+        //获取用户信息
+        Route::get('user-info', 'WechatController@getUserInfo');
+        //创建欠条
+        Route::post('create_lou', 'LouController@create');
+        //获取正在创建欠条
+        Route::get('lous', 'LouController@creatingLous');
+        //获取一张欠条
+        Route::get('one_lou', 'LouController@oneLou');
+        //操作欠条
+        Route::post('operate_lou','LouController@operateLou');
+        //获取首页账单数据
+        Route::get('index_data', 'IndexController@index');
+        //消息通知
+        Route::post('send_msg','MessageController@send');
+        Route::put('read_message','MessageController@read');
+        //获取信息
+        Route::get('get_msg','MessageController@messages');
+        //获取邀请码
+        Route::get('invite_code','LouController@invite');
+        //加入
+        Route::post('join_lou','LouController@join');
+    });
 });
+
+

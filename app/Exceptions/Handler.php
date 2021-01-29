@@ -2,8 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Utils\ErrorCode;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -29,7 +33,7 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param  \Exception $exception
      * @return void
      *
      * @throws \Exception
@@ -42,14 +46,40 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception $exception
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException) {
+            return $this->validate_json(ErrorCode::NO_PARAM_VALIDATE);
+        }
+
+        if($exception instanceof AuthorizationException){
+            return $this->validate_json(ErrorCode::UNAUTHORIZED);
+        }
         return parent::render($request, $exception);
+    }
+
+    public function validate_json($error_code)
+    {
+        return response()->json([
+            'code' => $error_code['code'],
+            'data' => [],
+            'message' => $error_code['message'],
+            'time' => time()
+        ]);
+    }
+
+    public function unauthorized($error_code){
+        return response()->json([
+            'code' => $error_code['code'],
+            'data' => [],
+            'message' => $error_code['message'],
+            'time' => time()
+        ]);
     }
 }
