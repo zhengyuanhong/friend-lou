@@ -28,11 +28,6 @@ class Lou extends Model
 
     protected $fillable = ['creditors_user_id', 'creator', 'debts_user_id', 'amount', 'note', 'status', 'repayment_at', 'duration'];
 
-    public function setRepaymentAtAttribute($value)
-    {
-        $this->attributes['repayment_at'] = date('Y-m-d', $value);
-    }
-
     public function getCreatedAtAttribute($time)
     {
         return date('Y-m-d', strtotime($time));

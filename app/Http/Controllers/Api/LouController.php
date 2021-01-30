@@ -36,7 +36,7 @@ class LouController extends Controller
             'note' => isset($input['note']) ? $input['note'] : "暂无",
             'status' => Lou::$statusMap['CREATING'],
             'creator' => $request->user->id,
-            'repayment_at' => time() + $input['duration'],
+            'repayment_at' => Carbon::now()->addDays($input['duration']),
             'duration' => $input['duration']
         ];
         if ($input['lou_type'] == 'lou_jie') {
@@ -56,7 +56,7 @@ class LouController extends Controller
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }
 
-    public function creatingLous(Request $request)
+    public function getLous(Request $request)
     {
         $status = $request->get('status');
         $user = $request->user;
@@ -85,7 +85,7 @@ class LouController extends Controller
                     ->whereNotNull('creditors_user_id');
                 break;
         }
-        $lou = $query->paginate(10);
+        $lou = $query->orderBy('created_at','desc')->paginate(10);
         return LouResource::collection($lou);
     }
 

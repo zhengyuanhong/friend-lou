@@ -16,7 +16,7 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         //创建欠条
         Route::post('create_lou', 'LouController@create');
         //获取正在创建欠条
-        Route::get('lous', 'LouController@creatingLous');
+        Route::get('lous', 'LouController@getLous');
         //获取一张欠条
         Route::get('one_lou', 'LouController@oneLou');
         //操作欠条
