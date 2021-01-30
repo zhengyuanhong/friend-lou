@@ -26,7 +26,7 @@ class IndexController extends Controller
 
         $data['bill'] = $bill ;
         $data['lou_count'] = $lou_count ;
-        $data['msg_count'] = Message::query()->where('is_read',0)->count();
+        $data['msg_count'] = Message::query()->where('is_read',0)->where('user_id',$user->id)->count();
 
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }

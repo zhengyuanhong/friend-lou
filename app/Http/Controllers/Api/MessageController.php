@@ -9,6 +9,7 @@ use App\Model\Lou;
 use App\Model\Message;
 use App\Utils\ErrorCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
@@ -18,10 +19,12 @@ class MessageController extends Controller
         $lou_id = $request->get('lou_id');
 
         $user = $request->user;
+
+        /** @var Lou $lou */
         $lou = Lou::query()->find($lou_id);
         $this->is_user($user, $lou);
 
-        if ($lou->louJiebeLongsToUser->messages()->first()) {
+        if ($lou->louMessage()->exists()) {
             return $this->response_json(ErrorCode::MSG_EXISTS);
         }
 
