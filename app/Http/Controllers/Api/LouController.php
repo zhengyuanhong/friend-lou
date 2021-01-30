@@ -12,26 +12,37 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class LouController extends Controller
 {
 
-    public function create(LouRequest $request)
+    public function create(Request $request)
     {
         $input = $request->all();
+        $validator = Validator::make($input, [
+            'amount' => 'required',
+            'duration' => 'required',
+            'lou_type' => 'required',
+            'note' => ''
+        ]);
+
+        if($validator->fails()){
+            return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
+        }
 
         $fill_arr = [
             'amount' => $input['amount'],
             'note' => isset($input['note']) ? $input['note'] : "暂无",
             'status' => Lou::$statusMap['CREATING'],
-            'creator' => $input['user_id'],
+            'creator' => $request->user->id,
             'repayment_at' => time() + $input['duration'],
             'duration' => $input['duration']
         ];
         if ($input['lou_type'] == 'lou_jie') {
-            $fill_arr['creditors_user_id'] = $input['user_id'];
+            $fill_arr['creditors_user_id'] = $request->user->id;
         } elseif ($input['lou_type'] == 'lou_qian') {
-            $fill_arr['debts_user_id'] = $input['user_id'];
+            $fill_arr['debts_user_id'] = $request->user->id;
         }
 
         $lou = null;

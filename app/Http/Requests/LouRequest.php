@@ -27,7 +27,6 @@ class LouRequest extends FormRequest
             'amount' => 'required',
             'duration' => 'required',
             'lou_type' => 'required',
-            'user_id' => 'required',
             'note' => ''
         ];
     }
