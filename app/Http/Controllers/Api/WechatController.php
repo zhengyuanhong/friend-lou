@@ -80,6 +80,9 @@ class WechatController extends Controller
     public function refreshToken(Request $request)
     {
         $jwt = $request->input('token', '');
+        if(empty($jwt)){
+            return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
+        }
         $data['token'] = JwtUtil::refreshToken($jwt);
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }

@@ -28,7 +28,7 @@ class MessageController extends Controller
             return $this->response_json(ErrorCode::MSG_EXISTS);
         }
 
-        $content = '对方已还款'.$lou->amount.'元，处理一下' . $lou->louQianBelongsToUser->name . '的欠条';
+        $content = '对方已还款【'.$lou->amount.'】元，处理一下【' . $lou->louQianBelongsToUser->name . '】的欠条';
         Message::query()->create([
             'content' => $content,
             'user_id' => $lou->louJieBelongsToUser->id,
