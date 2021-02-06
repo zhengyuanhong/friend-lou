@@ -19,7 +19,7 @@ class MsgService
             case 'bind':
                 $title = '绑定欠条通知';
                 if ($request->user->id == $lou->louJiebeLongsToUser->id) {
-                    $content = '你在' . $lou->created_at . '向【' . $lou->louJiebeLongsToUser->name . '】接了【' . $lou->amount . '】元，是否同意这张欠条？';
+                    $content = '你在' . $lou->created_at . '向【' . $lou->louJiebeLongsToUser->name . '】借了【' . $lou->amount . '】元，是否同意这张欠条？';
                     $user_id = $lou->louQianBelongsToUser->id;
                 }
                 if ($request->user->id == $lou->louQianBelongsToUser->id) {

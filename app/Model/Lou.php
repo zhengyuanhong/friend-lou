@@ -49,7 +49,7 @@ class Lou extends Model
     }
 
     public function louMessage(){
-        return $this->hasOne(Message::class,'lou_id','id');
+        return $this->hasOne(Message::class,'lou_id','id')->where('type','lou');
     }
 
     static public function diffTime($repayment_at){
@@ -61,10 +61,6 @@ class Lou extends Model
         //离还款还差几天
         $now = Carbon::createFromTimestamp($now);
         return $now->diffInDays(Carbon::createFromTimestamp($start));
-    }
-
-    public function message(){
-        return $this->hasOne(Message::class,'lou_id','id');
     }
 
     public function bindMessage(){
