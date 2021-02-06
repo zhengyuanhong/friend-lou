@@ -7,7 +7,10 @@ use App\Http\Requests\LouRequest;
 use App\Http\Resources\LouResource;
 use App\Model\Lou;
 use App\Model\Message;
+use App\Model\WechatUser;
+use App\Services\MsgService;
 use App\Utils\ErrorCode;
+use App\Utils\MsgCheckUtil;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -27,8 +30,14 @@ class LouController extends Controller
             'note' => ''
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
+        }
+        if (!empty($input['note'])) {
+            $res = MsgCheckUtil::checkRequest($input['note']);
+            if (!$res) {
+                return $this->response_json(ErrorCode::BREAK_RULE_MSG);
+            };
         }
 
         $fill_arr = [
@@ -85,7 +94,7 @@ class LouController extends Controller
                     ->whereNotNull('creditors_user_id');
                 break;
         }
-        $lou = $query->orderBy('created_at','desc')->paginate(10);
+        $lou = $query->orderBy('created_at', 'desc')->paginate(10);
         return LouResource::collection($lou);
     }
 
@@ -134,6 +143,59 @@ class LouController extends Controller
         $data['invite_code'] = $this->makeInviteCode($lou_id);
 
         return $this->response_json(ErrorCode::SUCCESS, $data);
+    }
+
+    public function bindUser(Request $request, MsgService $message)
+    {
+        $input = $request->all();
+        $validate = Validator::make($input, [
+            'unique_id' => 'required',
+            'lou_id' => ''
+        ]);
+        if ($validate->fails()) {
+            return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
+        }
+
+        $user = $request->user;
+        $queryUser = WechatUser::query()->where('unique_id', $input['unique_id'])->first();
+        //判断同一用户
+        if ($user->id == $queryUser->id) {
+            return $this->response_json(ErrorCode::ADD_SAME_USER);
+        }
+
+        $lou = Lou::query()->find($input['lou_id']);
+
+        if (empty($lou)) {
+            return $this->response_json(ErrorCode::LOU_IS_EXITS);
+        }
+
+        if ($lou->status >= Lou::$statusMap['QIAN_LOU'] || $lou->status >= Lou::$statusMap['JIE_LOU']) {
+            return $this->response_json(ErrorCode::READY_JOIN);
+        }
+
+        if (empty($lou->creditors_user_id)) {
+            if ($lou->debts_user_id == $queryUser->id) {
+                return $this->response_json(ErrorCode::ADD_SAME_USER);
+            }
+
+            $lou->creditors_user_id = $queryUser->id;
+//            $lou->status = Lou::$statusMap['JIE_LOU'];
+            //发送消息
+        }
+        //如果欠款的id为空
+        if (empty($lou->debts_user_id)) {
+            if ($lou->creditors_user_id == $queryUser->id) {
+                return $this->response_json(ErrorCode::SAME_USER);
+            }
+
+            $lou->debts_user_id = $queryUser->id;
+//            $lou->status = Lou::$statusMap['QIAN_LOU'];
+        }
+
+        $lou->save();
+        $message->createMsg($request, $lou, 'bind');
+
+        return $this->response_json(ErrorCode::SUCCESS);
     }
 
     public function join(Request $request)

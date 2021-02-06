@@ -20,7 +20,9 @@ class MessageResource extends JsonResource
             'lou_id' => $this->lou_id,
             'is_read'=>$this->is_read,
             'type' => $this->type,
-            'content' => $this->content
+            'title' => $this->title,
+            'content' => $this->content,
+            'created_at' => $this->created_at
         ];
     }
 }

@@ -8,21 +8,21 @@ class RepaymentMessage extends Message
     public $touser = '';
     public $page = '';
     public $data = [
-        'amount'=>[
+        'amount23'=>[
             'value'=>''
         ],
-        'repayment'=>[
+        'time22'=>[
             'value'=>''
         ],
-        'note'=>[
+        'thing9'=>[
             'value'=>''
         ]
     ];
 
     public function setData($amount,$repayment,$note)
     {
-        $this->data['amount']['value'] = $amount;
-        $this->data['repayment']['value'] = $repayment;
-        $this->data['note']['value'] = $note;
+        $this->data['amount23']['value'] = $amount;
+        $this->data['time22']['value'] = $repayment;
+        $this->data['thing9']['value'] = $note;
     }
 }

@@ -23,4 +23,6 @@ class ErrorCode
     const READY_JOIN = ['code'=>'READY_JOIN','message'=>'你已经加入'];
     const LOU_IS_EXITS = ['code'=>'LOU_IS_EXITS','message'=>'该欠条不存在'];
     const NO_MSG = ['code'=>'NO_MSG','message'=>'没有这条消息'];
+    const BREAK_RULE_MSG = ['code'=>'BREAK_RULE_MSG','message'=>'备注内容含违规内容'];
+    const ADD_SAME_USER = ['code'=>'SAME_USER','message'=>'不能添加自己'];
 }

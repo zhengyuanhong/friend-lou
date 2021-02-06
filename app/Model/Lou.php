@@ -62,4 +62,12 @@ class Lou extends Model
         $now = Carbon::createFromTimestamp($now);
         return $now->diffInDays(Carbon::createFromTimestamp($start));
     }
+
+    public function message(){
+        return $this->hasOne(Message::class,'lou_id','id');
+    }
+
+    public function bindMessage(){
+        return $this->hasOne(Message::class,'lou_id','id')->where('type','bind');
+    }
 }
