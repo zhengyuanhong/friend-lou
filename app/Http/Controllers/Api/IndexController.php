@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Model\Config;
 use App\Model\Lou;
 use App\Model\Message;
 use App\Utils\ErrorCode;
@@ -27,6 +28,8 @@ class IndexController extends Controller
         $data['bill'] = $bill ;
         $data['lou_count'] = $lou_count ;
         $data['msg_count'] = Message::query()->where('is_read',0)->where('user_id',$user->id)->count();
+
+        $data['config'] =Config::getIndexConifg();
 
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }
