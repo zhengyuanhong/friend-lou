@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \Illuminate\Support\Facades\Schema::defaultStringLength(191);
         JsonResource::withoutWrapping();
     }
 }
