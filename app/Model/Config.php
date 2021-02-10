@@ -42,12 +42,12 @@ class Config extends Model
     static function defaultData()
     {
         return [
-            ['key' => 'slogan', 'value' => '', 'type' => 'index'],
-            ['key' => 'mini_app_appid', 'value' => '', 'type' => 'index'],
-            ['key' => 'mini_app_path', 'value' => '', 'type' => 'index'],
-            ['key' => 'mini_app_name', 'value' => '', 'type' => 'index'],
-            ['key' => 'admire_image', 'value' => '', 'type' => 'index'],
-            ['key' => 'admire_name', 'value' => '', 'type' => 'index'],
+            ['key' => 'slogan', 'value' => '', 'type' => 'index','description'=>'标语'],
+            ['key' => 'mini_app_appid', 'value' => '', 'type' => 'index','description'=>'小程序appid'],
+            ['key' => 'mini_app_path', 'value' => '', 'type' => 'index','description'=>'小程序路径'],
+            ['key' => 'mini_app_name', 'value' => '', 'type' => 'index','description'=>'小程序名称'],
+            ['key' => 'admire_image', 'value' => '', 'type' => 'index','description'=>'赞赏码图片'],
+            ['key' => 'admire_name', 'value' => '', 'type' => 'index','description'=>'赞赏码名称'],
         ];
     }
 }
