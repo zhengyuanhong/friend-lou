@@ -15,7 +15,7 @@ class ConfigController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Config';
+    protected $title = '配置';
 
     /**
      * Make a grid builder.

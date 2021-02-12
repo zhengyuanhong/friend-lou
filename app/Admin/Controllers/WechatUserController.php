@@ -15,7 +15,7 @@ class WechatUserController extends AdminController
      *
      * @var string
      */
-    protected $title = 'WechatUser';
+    protected $title = '用户';
 
     /**
      * Make a grid builder.
@@ -26,14 +26,14 @@ class WechatUserController extends AdminController
     {
         $grid = new Grid(new WechatUser());
 
-        $grid->column('id', __('Id'));
-        $grid->column('unique_id', __('Unique id'));
-        $grid->column('name', __('Name'));
-        $grid->column('email', __('Email'));
-        $grid->column('credit_score', __('Credit score'));
-        $grid->column('openid', __('Openid'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('id', 'ID');
+        $grid->column('unique_id', '唯一id');
+        $grid->column('name', '昵称');
+        $grid->column('email', '邮箱');
+        $grid->column('credit_score', '信用分');
+        $grid->column('openid', 'Openid');
+        $grid->column('created_at', '创建时间');
+        $grid->column('updated_at', '更新时间');
 
         return $grid;
     }
@@ -48,14 +48,14 @@ class WechatUserController extends AdminController
     {
         $show = new Show(WechatUser::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('unique_id', __('Unique id'));
-        $show->field('name', __('Name'));
-        $show->field('email', __('Email'));
-        $show->field('credit_score', __('Credit score'));
+        $show->field('id', 'ID');
+        $show->field('unique_id', '唯一id');
+        $show->field('name', '昵称');
+        $show->field('email', '邮箱地址');
+        $show->field('credit_score', '信用分');
         $show->field('openid', __('Openid'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('created_at', '创建时间');
+        $show->field('updated_at', '更新时间');
 
         return $show;
     }

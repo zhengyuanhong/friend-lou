@@ -17,5 +17,5 @@ Route::group([
     $router->resource('wechat-users', WechatUserController::class);
     $router->resource('lous', LouController::class);
     $router->resource('configs', ConfigController::class);
-
+    $router->resource('messages', MessageController::class);
 });

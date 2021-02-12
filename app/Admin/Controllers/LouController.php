@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Model\Lou;
+use App\Model\WechatUser;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -15,7 +16,7 @@ class LouController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Lou';
+    protected $title = '欠条';
 
     /**
      * Make a grid builder.
@@ -26,18 +27,39 @@ class LouController extends AdminController
     {
         $grid = new Grid(new Lou());
 
-        $grid->column('id', __('Id'));
-        $grid->column('creditors_user_id', __('Creditors user id'));
-        $grid->column('debts_user_id', __('Debts user id'));
-        $grid->column('amount', __('Amount'));
-        $grid->column('note', __('Note'));
-        $grid->column('creator', __('Creator'));
-        $grid->column('status', __('Status'));
-        $grid->column('repayment_at', __('Repayment at'));
-        $grid->column('duration', __('Duration'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
-        $grid->column('deleted_at', __('Deleted at'));
+        $grid->column('id', 'ID');
+        $grid->column('creditors_user_id', '债权人')->display(function ($id) {
+            return WechatUser::query()->find($id)->name ?: '暂无';
+        });
+        $grid->column('debts_user_id', '债务人')->display(function ($id) {
+            return WechatUser::query()->find($id)->name ?: '暂无';
+        });
+        $grid->column('amount', '金额');
+        $grid->column('note', '备注');
+        $grid->column('creator', '创建人')->display(function ($id) {
+            return WechatUser::query()->find($id)->name ?: '暂无';
+        });
+        $grid->column('status', '状态')->display(function ($status) {
+            $statusMap = [
+                0 => '<text style="color: blue;">正在创建</text>',
+                1 => '<text style="color: orange;">借还中</text>',
+                2 => '<text style="color: green;">已还清</text>'
+            ];
+            return $statusMap[$status];
+        });
+        $grid->column('repayment_at', '还款日期')->display(function ($repayment_at) {
+            $res = Lou::diffTime($repayment_at);
+            if($res == 'overdue'){
+                return '<text style="color: red;">已逾期</text>';
+            }
+            return "<text style='color: orange;'>离还款还有{$res}天</text>";
+        });
+        $grid->column('duration', '还款期限')->display(function($day){
+            return "<text>{$day}天</text>";
+        });
+        $grid->column('created_at','创建时间');
+        $grid->column('updated_at', '更新时间');
+        $grid->column('deleted_at', '删除时间');
 
         return $grid;
     }
@@ -52,18 +74,18 @@ class LouController extends AdminController
     {
         $show = new Show(Lou::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('creditors_user_id', __('Creditors user id'));
-        $show->field('debts_user_id', __('Debts user id'));
-        $show->field('amount', __('Amount'));
-        $show->field('note', __('Note'));
-        $show->field('creator', __('Creator'));
-        $show->field('status', __('Status'));
-        $show->field('repayment_at', __('Repayment at'));
-        $show->field('duration', __('Duration'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-        $show->field('deleted_at', __('Deleted at'));
+        $show->field('id', 'ID');
+        $show->field('creditors_user_id', "债权人");
+        $show->field('debts_user_id', '债务人');
+        $show->field('amount', '金额');
+        $show->field('note', '备注');
+        $show->field('creator', '创建人');
+        $show->field('status', '状态');
+        $show->field('repayment_at', '还款日期');
+        $show->field('duration', '还款期限');
+        $show->field('created_at', '创建时间');
+        $show->field('updated_at', '更新时间');
+        $show->field('deleted_at', '删除时间');
 
         return $show;
     }
@@ -77,14 +99,14 @@ class LouController extends AdminController
     {
         $form = new Form(new Lou());
 
-        $form->number('creditors_user_id', __('Creditors user id'));
-        $form->number('debts_user_id', __('Debts user id'));
-        $form->decimal('amount', __('Amount'));
-        $form->text('note', __('Note'));
-        $form->number('creator', __('Creator'));
-        $form->switch('status', __('Status'));
-        $form->datetime('repayment_at', __('Repayment at'))->default(date('Y-m-d H:i:s'));
-        $form->text('duration', __('Duration'));
+        $form->number('creditors_user_id','债权人');
+        $form->number('debts_user_id', '债务人');
+        $form->decimal('amount', '金额');
+        $form->text('note', '备注');
+        $form->number('creator', '备注');
+        $form->switch('status', '状态');
+        $form->datetime('repayment_at','还款日期')->default(date('Y-m-d H:i:s'));
+        $form->text('duration', '还款期限');
 
         return $form;
     }
