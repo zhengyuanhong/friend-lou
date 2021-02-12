@@ -192,6 +192,7 @@ class LouController extends Controller
 //            $lou->status = Lou::$statusMap['QIAN_LOU'];
         }
 
+        $lou->repayment_at = Carbon::now()->addDays($lou->duration);
         $lou->save();
         $message->createMsg($request, $lou, 'bind');
 
