@@ -32,7 +32,7 @@ class LouController extends AdminController
                 return empty($id) ? '暂无' : WechatUser::query()->find($id)->name;
         });
         $grid->column('debts_user_id', '债务人')->display(function ($id) {
-            return WechatUser::query()->find($id)->name ?: '暂无';
+            return empty($id) ? '暂无' : WechatUser::query()->find($id)->name;
         });
         $grid->column('amount', '金额');
         $grid->column('note', '备注');
