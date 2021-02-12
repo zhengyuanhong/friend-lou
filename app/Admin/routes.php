@@ -13,7 +13,6 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('home');
-//    $router->get('/setting', Setting::class);
     $router->resource('wechat-users', WechatUserController::class);
     $router->resource('lous', LouController::class);
     $router->resource('configs', ConfigController::class);
