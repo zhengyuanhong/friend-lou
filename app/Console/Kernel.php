@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\cron\RepaymentDueCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -27,6 +28,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         $schedule->command('z:repayment-due')->dailyAt('9:00');
+        $schedule->call(function(){
+            Log::info('定时器运行');
+        })->everyMinute();
         //          ->hourly();
     }
 
