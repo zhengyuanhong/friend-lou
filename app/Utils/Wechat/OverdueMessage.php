@@ -21,31 +21,33 @@
 namespace App\Utils\Wechat;
 
 class OverdueMessage extends Message{
-    public $templateId = '';
-    public $toUser = '';
+    public $templateId = 'REHzo2YeIq0h9uGan-tRJ9S6VSDCCUAq-CFUQh1h2vQ';
+    public $touser = '';
     public $page = '';
     public $data = [
-        'name'=>[
+        'name1'=>[
             'value'=>''
         ],
-        'amount'=>[
+        'amount2'=>[
             'value'=>''
         ],
-        'date'=>[
+        'date3'=>[
             'value'=>''
         ],
-        'type'=>[
+        'thing4'=>[
             'value'=>''
         ],
-        'note'=>[
+        'thing5'=>[
             'value'=>''
         ]
     ];
 
-    public function setData($amount,$repayment,$note)
+    public function setData($name,$amount,$date,$overdue,$note='欠条')
     {
-        $this->data['amount']['value'] = $amount;
-        $this->data['repayment']['value'] = $repayment;
-        $this->data['note']['value'] = $note;
+        $this->data['name1']['value'] = $name;
+        $this->data['amount2']['value'] = $amount;
+        $this->data['date3']['value'] = $date;
+        $this->data['thing4']['value'] = $note;
+        $this->data['thing5']['value'] = '逾期'.$overdue.'天';
     }
 }

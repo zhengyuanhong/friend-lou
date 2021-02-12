@@ -10,6 +10,7 @@ class Lou extends Model
 {
     use SoftDeletes;
     protected $table = 'user_lou';
+    protected $dates = ['repayment_at'];
 
     const CREATING = 'CREATING';
     const JIE_LOU = 'JIE_LOU';
@@ -75,5 +76,13 @@ class Lou extends Model
 
     public function bindMessage(){
         return $this->hasOne(Message::class,'lou_id','id')->where('type','bind');
+    }
+
+    public function repaymentTemplateMessage(){
+        return $this->hasOne(Message::class,'lou_id','id')->where('type','repayment');
+    }
+
+    public function overdueTemplateMessage(){
+        return $this->hasOne(Message::class,'lou_id','id')->where('type','overdue');
     }
 }

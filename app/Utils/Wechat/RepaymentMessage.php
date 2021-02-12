@@ -4,9 +4,9 @@ namespace App\Utils\Wechat;
 
 class RepaymentMessage extends Message
 {
-    public $template_id = '';
+    public $template_id = '6agnykuZddRbPjnMSWrZD0iecg32D7kWaMYmD8bOmho';
     public $touser = '';
-    public $page = '';
+    public $page = '/pages/index/index';
     public $data = [
         'amount23'=>[
             'value'=>''
