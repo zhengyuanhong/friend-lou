@@ -28,9 +28,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         $schedule->command('z:repayment-due')->dailyAt('9:00');
-        $schedule->call(function(){
-            Log::info('定时器运行');
-        })->everyMinute();
+//        $schedule->call(function(){
+//            Log::info('定时器运行');
+//        })->everyMinute();
         //          ->hourly();
     }
 
