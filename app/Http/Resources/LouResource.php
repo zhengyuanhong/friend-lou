@@ -28,9 +28,10 @@ class LouResource extends JsonResource
                 'lou_qian_name' => empty($this->debts_user_id) ? "" : $this->louQianbeLongsToUser->name,
                 'qian_user_id' => empty($this->debts_user_id) ? "" : $this->louQianbeLongsToUser->id,
             ]),
-            'message' => empty($this->bindMessage) ? false : $this->bindMessage,
+            'message' => empty($this->bindMessage) ? false : $this->bindMessage, //获取绑定消息
             'amount' => $this->amount,
             'note' => $this->note,
+            'is_notify' => empty($this->louMessage) ? false : true, //是否发送通知消息
             'status' => $this->status,
             'duration' => $this->duration,
             'duration_day' => Lou::diffTime($this->repayment_at),

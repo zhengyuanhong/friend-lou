@@ -7,6 +7,7 @@ use App\Http\Requests\LouRequest;
 use App\Http\Resources\LouResource;
 use App\Model\Lou;
 use App\Model\Message;
+use App\Model\UserRecord;
 use App\Model\WechatUser;
 use App\Services\MsgService;
 use App\Utils\ErrorCode;
@@ -20,14 +21,15 @@ use Illuminate\Support\Facades\Validator;
 class LouController extends Controller
 {
 
-    public function create(Request $request)
+    public function create(Request $request, MsgService $message)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
             'amount' => 'required',
             'duration' => 'required',
             'lou_type' => 'required',
-            'note' => ''
+            'note' => '',
+            'other_user_id' => ''
         ]);
 
         if ($validator->fails()) {
@@ -48,10 +50,22 @@ class LouController extends Controller
             'repayment_at' => Carbon::now()->addDays($input['duration']),
             'duration' => $input['duration']
         ];
+        //借条
         if ($input['lou_type'] == 'lou_jie') {
+            //借款者
             $fill_arr['creditors_user_id'] = $request->user->id;
+            if (!empty($input['other_user_id'])) {
+                //欠款者
+                $fill_arr['debts_user_id'] = $input['other_user_id'];
+            }
+            //欠条
         } elseif ($input['lou_type'] == 'lou_qian') {
+            //欠款者
             $fill_arr['debts_user_id'] = $request->user->id;
+            if (!empty($input['other_user_id'])) {
+                //借款者
+                $fill_arr['creditors_user_id'] = $input['other_user_id'];
+            }
         }
 
         $lou = null;
@@ -59,8 +73,13 @@ class LouController extends Controller
             $lou = Lou::query()->create($fill_arr);
         });
 
-        $data = $lou->toArray();
 
+        if (!empty($input['other_user_id'])) {
+            //借款者和欠款者都到位，发送信息
+            $message->createMsg($request, $lou, 'bind');
+        }
+
+        $data = $lou->toArray();
         //TODO 添加延时队列（30分钟后作废）
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }
@@ -69,7 +88,7 @@ class LouController extends Controller
     {
         $status = $request->get('status');
         $user = $request->user;
-        $query = Lou::query()->where('status', Lou::$statusMap[$status]);
+        $query = Lou::query()->with(['louMessage', 'bindMessage'])->where('status', Lou::$statusMap[$status]);
         switch ($status) {
             case 'CREATING':
                 //创建中
@@ -115,7 +134,12 @@ class LouController extends Controller
 
     public function operateLou(Request $request)
     {
-        $lou = Lou::query()->find($request->get('lou_id'));
+        $lou_id = $request->get('lou_id');
+        if (empty($lou_id)) {
+            return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
+        }
+
+        $lou = Lou::query()->find($lou_id);
         $user = $request->user;
         $this->is_user($user, $lou);
         $operate_type = $request->get('operate_type');
@@ -124,6 +148,7 @@ class LouController extends Controller
             case 'ok':
                 $lou->status = Lou::$statusMap['JIE_LOU_OK'];
                 $lou->save();
+                Message::changeIsRead($lou_id, 'lou', Message::$statusMap['yes']);
                 break;
             case 'delete':
                 $lou->delete();
@@ -158,10 +183,16 @@ class LouController extends Controller
 
         $user = $request->user;
         $queryUser = WechatUser::query()->where('unique_id', $input['unique_id'])->first();
+        if(empty($queryUser)){
+            return $this->response_json(ErrorCode::USER_IS_NO_EXITS);
+        }
         //判断同一用户
         if ($user->id == $queryUser->id) {
             return $this->response_json(ErrorCode::ADD_SAME_USER);
         }
+
+        //存入用户记录 UserRecord
+        UserRecord::saveUser($user, $queryUser->id);
 
         $lou = Lou::query()->find($input['lou_id']);
 
@@ -179,8 +210,6 @@ class LouController extends Controller
             }
 
             $lou->creditors_user_id = $queryUser->id;
-//            $lou->status = Lou::$statusMap['JIE_LOU'];
-            //发送消息
         }
         //如果欠款的id为空
         if (empty($lou->debts_user_id)) {
@@ -189,7 +218,6 @@ class LouController extends Controller
             }
 
             $lou->debts_user_id = $queryUser->id;
-//            $lou->status = Lou::$statusMap['QIAN_LOU'];
         }
 
         $lou->repayment_at = Carbon::now()->addDays($lou->duration);

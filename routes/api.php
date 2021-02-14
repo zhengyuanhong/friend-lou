@@ -13,6 +13,9 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         Route::put('set_user_info', 'WechatController@setUserInfo');
         //获取用户信息
         Route::get('user-info', 'WechatController@getUserInfo');
+        //添加其他用户
+        Route::post('save_user', 'WechatController@saveOtherUser');
+        Route::get('other_user', 'WechatController@otherUser');
         //创建欠条
         Route::post('create_lou', 'LouController@create');
         //获取正在创建欠条

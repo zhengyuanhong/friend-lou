@@ -28,4 +28,12 @@ class Message extends Model
     {
         return $this->belongsTo(Lou::class, 'lou_id', 'id');
     }
+
+    static public function changeIsRead($lou_id, $type, $is_read)
+    {
+        self::query()
+            ->where('lou_id', $lou_id)
+            ->where('type', $type)
+            ->update(['is_read' => $is_read]);
+    }
 }
