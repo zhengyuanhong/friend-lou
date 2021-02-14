@@ -21,12 +21,17 @@ class UserRecord extends Model
 
     static function saveUser($user, $other_user_id)
     {
-        $record = self::query()
+        $record1 = self::query()
             ->where('user_id', $user->id)
             ->where('other_user_id', $other_user_id)
             ->first();
 
-        if (empty($record)) {
+        $record2 = self::query()
+            ->where('user_id', $other_user_id)
+            ->where('other_user_id', $user->id)
+            ->first();
+
+        if (empty($record1)) {
             self::query()->create(
                 [
                     'user_id' => $user->id,
@@ -34,5 +39,15 @@ class UserRecord extends Model
                 ]
             );
         }
+
+        if (empty($record2)) {
+            self::query()->create(
+                [
+                    'user_id' => $other_user_id,
+                    'other_user_id' => $user->id
+                ]
+            );
+        }
+
     }
 }
