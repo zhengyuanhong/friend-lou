@@ -96,7 +96,8 @@ class LouController extends Controller
                 break;
             case 'JIE_LOU':
                 //你借给ta
-                $query = $query->where('creditors_user_id', $user->id);
+                $query = $query->where('creditors_user_id', $user->id)
+                    ->where('debts_user_id','<>',$user->id);
                 break;
             case 'JIE_LOU_OK':
                 //已收款
@@ -105,12 +106,11 @@ class LouController extends Controller
             case 'QIAN_LOU':
                 //你的欠条
                 $query = $query->Where('debts_user_id', $user->id)
-                    ->whereNotNull('creditors_user_id');
+                    ->where('creditors_user_id', '<>', $user->id);
                 break;
             //已还清
             case 'QIAN_LOU_OK':
-                $query = $query->where('debts_user_id', $user->id)
-                    ->whereNotNull('creditors_user_id');
+                $query = $query->where('debts_user_id', $user->id);
                 break;
         }
         $lou = $query->orderBy('created_at', 'desc')->paginate(10);
@@ -183,7 +183,7 @@ class LouController extends Controller
 
         $user = $request->user;
         $queryUser = WechatUser::query()->where('unique_id', $input['unique_id'])->first();
-        if(empty($queryUser)){
+        if (empty($queryUser)) {
             return $this->response_json(ErrorCode::USER_IS_NO_EXITS);
         }
         //判断同一用户
