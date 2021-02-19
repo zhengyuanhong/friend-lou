@@ -68,12 +68,15 @@ class Lou extends Model
     {
         $start = strtotime($repayment_at);
         $now = time();
-        if ($start < $now) {
-            return 'overdue';
-        }
         //离还款还差几天
-        $now = Carbon::createFromTimestamp($now);
-        return $now->diffInDays(Carbon::createFromTimestamp($start));
+        $carbon = Carbon::createFromTimestamp($now);
+        $during = $carbon->diffInDays(Carbon::createFromTimestamp($start));
+
+        if ($start < $now) {
+            return ['type' => 'overdue', 'day' => $during];
+        } else {
+            return ['type' => 'during', 'day' => $during];
+        }
     }
 
     public function bindMessage()

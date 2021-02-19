@@ -97,7 +97,7 @@ class LouController extends Controller
             case 'JIE_LOU':
                 //你借给ta
                 $query = $query->where('creditors_user_id', $user->id)
-                    ->where('debts_user_id','<>',$user->id);
+                    ->where('debts_user_id', '<>', $user->id);
                 break;
             case 'JIE_LOU_OK':
                 //已收款
@@ -147,6 +147,7 @@ class LouController extends Controller
         switch ($operate_type) {
             case 'ok':
                 $lou->status = Lou::$statusMap['JIE_LOU_OK'];
+                $lou->repayment_at = Carbon::now();
                 $lou->save();
                 Message::changeIsRead($lou_id, 'lou', Message::$statusMap['yes']);
                 break;
