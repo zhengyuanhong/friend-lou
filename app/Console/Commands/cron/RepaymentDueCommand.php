@@ -62,6 +62,7 @@ class RepaymentDueCommand extends Command
                     }
                 }
             });
+        Log::info('查询是否到还款时间');
         return;
     }
 
