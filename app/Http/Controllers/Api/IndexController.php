@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BannerResource;
+use App\Model\Banner;
 use App\Model\Config;
 use App\Model\Lou;
 use App\Model\Message;
@@ -30,6 +32,8 @@ class IndexController extends Controller
         $data['msg_count'] = Message::query()->where('is_read',0)->where('user_id',$user->id)->count();
 
         $data['config'] =Config::getIndexConifg();
+
+        $data['banner'] = BannerResource::collection(Banner::query()->limit(10)->get());
 
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }
