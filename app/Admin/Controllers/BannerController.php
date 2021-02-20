@@ -29,7 +29,9 @@ class BannerController extends AdminController
         $grid->column('id', 'ID');
         $grid->column('type', '图片类型');
         $grid->column('miniappid', '小程序appid');
-        $grid->column('url', __('图片链接'));
+        $grid->column('url', '图片链接')->display(function($url){
+            return '<img style="width:320px;height:100px;" src='.$url.' />';
+        });
         $grid->column('created_at', '创建时间');
         $grid->column('updated_at', '更新时间');
 
