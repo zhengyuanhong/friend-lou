@@ -69,9 +69,8 @@ class BannerController extends AdminController
 
         $form->select('type', '图片类型')->options(['miniapp'=>'小程序图片','image'=>'纯图片']);
         $form->text('miniappid', '小程序appid');
-        $form->url('url', '图片链接');
-//        $form->image('url','图片上传');
-
+//        $form->url('url', '图片链接');
+        $form->image('url','图片上传');
         return $form;
     }
 }
