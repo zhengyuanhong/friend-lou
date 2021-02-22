@@ -35,7 +35,7 @@ class BannerController extends AdminController
         $grid->column('type', '图片类型');
 
         $grid->column('is_show', '是否显示')->switch($this->states);
-
+        $grid->column('weight','显示权重')->editable();
         $grid->column('miniappid', '小程序appid');
         $grid->column('url', '图片链接')->display(function ($url) {
             return '<img style="width:320px;height:100px;" src=' . $url . ' />';
@@ -58,6 +58,7 @@ class BannerController extends AdminController
 
         $show->field('id', 'ID');
         $show->field('type', '图片类型');
+        $show->field('weight','显示权重');
         $show->field('is_show', '是否显示');
         $show->field('miniappid', '小程序appid');
         $show->field('url', '图片链接');
@@ -78,6 +79,7 @@ class BannerController extends AdminController
 
         $form->select('type', '图片类型')->options(['miniapp' => '小程序图片', 'image' => '纯图片']);
         $form->switch('is_show', '是否显示')->states($this->states);
+        $form->number('weight','显示权重')->max(100);
         $form->text('miniappid', '小程序appid');
 //        $form->url('url', '图片链接');
         $form->image('url', '图片上传');

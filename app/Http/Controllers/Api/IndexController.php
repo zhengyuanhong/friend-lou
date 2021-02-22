@@ -33,7 +33,7 @@ class IndexController extends Controller
 
         $data['config'] = Config::getIndexConifg();
 
-        $data['banner'] = BannerResource::collection(Banner::query()->where('is_show', 1)->limit(10)->get());
+        $data['banner'] = BannerResource::collection(Banner::query()->where('is_show', 1)->orderBy('weight','DESC')->limit(10)->get());
 
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }
