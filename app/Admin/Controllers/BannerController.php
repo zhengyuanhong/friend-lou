@@ -17,6 +17,11 @@ class BannerController extends AdminController
      */
     protected $title = '首页轮播图';
 
+    protected $states = [
+        'on' => ['value' => 1, 'text' => '显示', 'color' => 'primary'],
+        'off' => ['value' => 0, 'text' => '隐藏', 'color' => 'default'],
+    ];
+
     /**
      * Make a grid builder.
      *
@@ -28,9 +33,12 @@ class BannerController extends AdminController
 
         $grid->column('id', 'ID');
         $grid->column('type', '图片类型');
+
+        $grid->column('is_show', '是否显示')->switch($this->states);
+
         $grid->column('miniappid', '小程序appid');
-        $grid->column('url', '图片链接')->display(function($url){
-            return '<img style="width:320px;height:100px;" src='.$url.' />';
+        $grid->column('url', '图片链接')->display(function ($url) {
+            return '<img style="width:320px;height:100px;" src=' . $url . ' />';
         });
         $grid->column('created_at', '创建时间');
         $grid->column('updated_at', '更新时间');
@@ -50,6 +58,7 @@ class BannerController extends AdminController
 
         $show->field('id', 'ID');
         $show->field('type', '图片类型');
+        $show->field('is_show', '是否显示');
         $show->field('miniappid', '小程序appid');
         $show->field('url', '图片链接');
         $show->field('created_at', '创建时间');
@@ -67,10 +76,11 @@ class BannerController extends AdminController
     {
         $form = new Form(new Banner());
 
-        $form->select('type', '图片类型')->options(['miniapp'=>'小程序图片','image'=>'纯图片']);
+        $form->select('type', '图片类型')->options(['miniapp' => '小程序图片', 'image' => '纯图片']);
+        $form->switch('is_show', '是否显示')->states($this->states);
         $form->text('miniappid', '小程序appid');
 //        $form->url('url', '图片链接');
-        $form->image('url','图片上传');
+        $form->image('url', '图片上传');
         return $form;
     }
 }

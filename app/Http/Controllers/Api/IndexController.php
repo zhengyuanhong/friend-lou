@@ -21,19 +21,19 @@ class IndexController extends Controller
         $bill['qian'] = $user->louQian()->where('status', Lou::$statusMap['QIAN_LOU'])->sum('amount');
 
         $lou_count = [];
-        $lou_count['creating'] = Lou::query()->where('creator',$user->id)
-            ->where('status',Lou::$statusMap['CREATING'])->count();
-        $lou_count['lou_qian'] = Lou::query()->where('debts_user_id',$user->id)
-            ->where('status',Lou::$statusMap['QIAN_LOU'])->count();
+        $lou_count['creating'] = Lou::query()->where('creator', $user->id)
+            ->where('status', Lou::$statusMap['CREATING'])->count();
+        $lou_count['lou_qian'] = Lou::query()->where('debts_user_id', $user->id)
+            ->where('status', Lou::$statusMap['QIAN_LOU'])->count();
 
 
-        $data['bill'] = $bill ;
-        $data['lou_count'] = $lou_count ;
-        $data['msg_count'] = Message::query()->where('is_read',0)->where('user_id',$user->id)->count();
+        $data['bill'] = $bill;
+        $data['lou_count'] = $lou_count;
+        $data['msg_count'] = Message::query()->where('is_read', 0)->where('user_id', $user->id)->count();
 
-        $data['config'] =Config::getIndexConifg();
+        $data['config'] = Config::getIndexConifg();
 
-        $data['banner'] = BannerResource::collection(Banner::query()->limit(10)->get());
+        $data['banner'] = BannerResource::collection(Banner::query()->where('is_show', 1)->limit(10)->get());
 
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }
