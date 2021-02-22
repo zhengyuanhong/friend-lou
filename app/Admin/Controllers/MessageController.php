@@ -37,7 +37,7 @@ class MessageController extends AdminController
                 'lou' => '<text style="color: greenyellow;">已还款提醒</text>',
                 'bind' => '<text style="color: blueviolet;">绑定消息</text>',
                 'msg' => '<text style="color: orange;">系统消息</text>',
-                'repayment' => '<text style="color: green;">还款提醒</text>',
+                'repayment' => '<text style="color: #0e1480;">还款提醒</text>',
                 'overdue' => '<text style="color: red;">逾期提醒</text>'
             ];
             return $typeMap[$type];
@@ -48,8 +48,8 @@ class MessageController extends AdminController
         $grid->column('is_read', '状态')->display(function ($status) {
             $statusMap = [
                 0 => '<text style="color:red;">未读</textc>',
-                1 => '<text style="color:green;">已读</text>',
-                2 => '<text style="color:green;">借条邀请已接受</text>',
+                1 => '<text style="color:#0e1480;">已读</text>',
+                2 => '<text style="color:#0e1480;">借条邀请已接受</text>',
                 3 => '<text style="color:red;">借条邀请已拒绝</text>',
             ];
 
