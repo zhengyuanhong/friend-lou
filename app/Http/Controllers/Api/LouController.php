@@ -9,6 +9,7 @@ use App\Model\Lou;
 use App\Model\Message;
 use App\Model\UserRecord;
 use App\Model\WechatUser;
+use App\Services\LouService;
 use App\Services\MsgService;
 use App\Utils\ErrorCode;
 use App\Utils\MsgCheckUtil;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Validator;
 class LouController extends Controller
 {
 
-    public function create(Request $request, MsgService $message)
+    public function create(Request $request, MsgService $message, LouService $louService)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -41,45 +42,7 @@ class LouController extends Controller
                 return $this->response_json(ErrorCode::BREAK_RULE_MSG);
             };
         }
-
-        $fill_arr = [
-            'amount' => $input['amount'],
-            'note' => isset($input['note']) ? $input['note'] : "暂无",
-            'status' => Lou::$statusMap['CREATING'],
-            'creator' => $request->user->id,
-            'repayment_at' => Carbon::now()->addDays($input['duration']),
-            'duration' => $input['duration']
-        ];
-        //借条
-        if ($input['lou_type'] == 'lou_jie') {
-            //借款者
-            $fill_arr['creditors_user_id'] = $request->user->id;
-            if (!empty($input['other_user_id'])) {
-                //欠款者
-                $fill_arr['debts_user_id'] = $input['other_user_id'];
-            }
-            //欠条
-        } elseif ($input['lou_type'] == 'lou_qian') {
-            //欠款者
-            $fill_arr['debts_user_id'] = $request->user->id;
-            if (!empty($input['other_user_id'])) {
-                //借款者
-                $fill_arr['creditors_user_id'] = $input['other_user_id'];
-            }
-        }
-
-        $lou = null;
-        Cache::lock('lock')->get(function () use ($fill_arr, &$lou) {
-            $lou = Lou::query()->create($fill_arr);
-        });
-
-
-        if (!empty($input['other_user_id'])) {
-            //借款者和欠款者都到位，发送信息
-            $message->createMsg($request, $lou, 'bind');
-        }
-
-        $data = $lou->toArray();
+        $data = $louService->createLou($request, $input, $message);
         //TODO 添加延时队列（30分钟后作废）
         return $this->response_json(ErrorCode::SUCCESS, $data);
     }
