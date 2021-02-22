@@ -34,7 +34,7 @@ class MessageController extends AdminController
         $grid->column('lou_id', '欠条id');
         $grid->column('type', '类型')->display(function ($type) {
             $typeMap = [
-                'lou' => '<text style="color: greenyellow;">已还款提醒</text>',
+                'lou' => '<text style="color: green;">已还款提醒</text>',
                 'bind' => '<text style="color: blueviolet;">绑定消息</text>',
                 'msg' => '<text style="color: orange;">系统消息</text>',
                 'repayment' => '<text style="color: #0e1480;">还款提醒</text>',
