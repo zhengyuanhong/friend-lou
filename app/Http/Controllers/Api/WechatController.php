@@ -85,6 +85,10 @@ class WechatController extends Controller
         $id = $request->input('id', '');
 
         $user = WechatUser::query()->find($id);
+        if($user->name == $name){
+            return $this->response_json(ErrorCode::SAME_NAME);
+        }
+
         if ($name) $user->name = $name;
         if ($email) $user->email = $email;
         $user->save();

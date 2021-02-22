@@ -25,4 +25,5 @@ class ErrorCode
     const NO_MSG = ['code'=>'NO_MSG','message'=>'没有这条消息'];
     const BREAK_RULE_MSG = ['code'=>'BREAK_RULE_MSG','message'=>'备注内容含违规内容'];
     const ADD_SAME_USER = ['code'=>'SAME_USER','message'=>'不能添加自己'];
+    const SAME_NAME = ['code'=>'SAME_NAME','message'=>'昵称和其他人重复了'];
 }
