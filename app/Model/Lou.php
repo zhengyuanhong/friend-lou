@@ -36,11 +36,18 @@ class Lou extends Model
         });
     }
 
-
-    protected $fillable = ['creditors_user_id', 'creator', 'debts_user_id', 'amount', 'note', 'status', 'repayment_at', 'duration'];
+    protected $fillable = ['creditors_user_id', 'creator', 'debts_user_id', 'amount', 'note', 'status','repayment_end_at' ,'repayment_at', 'duration'];
 
     public function getCreatedAtAttribute($time)
     {
+        return date('Y-m-d', strtotime($time));
+    }
+
+    public function getRepaymentEndAtAttribute($time)
+    {
+        if(empty($time)){
+           return '';
+        }
         return date('Y-m-d', strtotime($time));
     }
 

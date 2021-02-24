@@ -36,6 +36,7 @@ class LouResource extends JsonResource
             'duration' => $this->duration,
             'duration_day' => Lou::diffTime($this->repayment_at),
             'repayment_at' => $this->repayment_at,
+            'repayment_end_at' => $this->repayment_end_at,
             'created_at' => $this->created_at
         ];
     }

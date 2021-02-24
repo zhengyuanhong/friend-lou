@@ -111,7 +111,8 @@ class LouController extends Controller
         switch ($operate_type) {
             case 'ok':
                 $lou->status = Lou::$statusMap['JIE_LOU_OK'];
-                $lou->repayment_at = Carbon::now();
+                //还款时间
+                $lou->repayment_end_at = Carbon::now();
                 $lou->save();
                 Message::changeIsRead($lou_id, 'lou', Message::$statusMap['yes']);
                 break;

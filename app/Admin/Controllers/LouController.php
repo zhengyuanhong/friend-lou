@@ -57,6 +57,7 @@ class LouController extends AdminController
             }
             return "<text style='color: orange;'>【离还款还有{$res['day']}天】<text style='color: black;'>{$repayment_at}</text></text>";
         });
+        $grid->column('repayment_end_at','最后还款时间');
         $grid->column('duration', '还款期限')->display(function ($day) {
             return "<text>{$day}天</text>";
         });
@@ -85,6 +86,7 @@ class LouController extends AdminController
         $show->field('creator', '创建人');
         $show->field('status', '状态');
         $show->field('repayment_at', '还款日期');
+        $show->field('repayment_end_at', '最后还款日期');
         $show->field('duration', '还款期限');
         $show->field('created_at', '创建时间');
         $show->field('updated_at', '更新时间');
