@@ -7,6 +7,7 @@ use App\Http\Requests\LouRequest;
 use App\Http\Resources\LouResource;
 use App\Model\Lou;
 use App\Model\Message;
+use App\Model\RepaymentTimeConfig;
 use App\Model\UserRecord;
 use App\Model\WechatUser;
 use App\Services\LouService;
@@ -242,6 +243,12 @@ class LouController extends Controller
         if ($user->id != $lou->creditors_user_id || $user->id != $lou->debts_user_id) {
             $this->response_json(ErrorCode::UNAUTHORIZED);
         }
+    }
+
+    public function getRepaymentConfig(Request $request)
+    {
+        $data = RepaymentTimeConfig::getConfig();
+        return $this->response_json(ErrorCode::SUCCESS, $data);
     }
 
     public function makeInviteCode($lou_id)

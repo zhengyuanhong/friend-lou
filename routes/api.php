@@ -26,6 +26,8 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         Route::get('one_lou', 'LouController@oneLou');
         //操作欠条
         Route::post('operate_lou','LouController@operateLou');
+        //获取还款期限配置
+        Route::get('repayment_config','LouController@getRepaymentConfig');
         //绑定欠款人
         Route::post('bind_user','LouController@bindUser');
         //获取首页账单数据
