@@ -26,4 +26,5 @@ class ErrorCode
     const BREAK_RULE_MSG = ['code'=>'BREAK_RULE_MSG','message'=>'备注内容含违规内容'];
     const ADD_SAME_USER = ['code'=>'SAME_USER','message'=>'不能添加自己'];
     const SAME_NAME = ['code'=>'SAME_NAME','message'=>'昵称和其他人重复了'];
+    const CONTINUITY_FEEDBACK = ['code'=>'CONTINUITY_FEEDBACK','message'=>'你已经提交过了，请稍后再试'];
 }

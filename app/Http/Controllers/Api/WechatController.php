@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserInfoRequest;
 use App\Http\Requests\WechatUserRequest;
 use App\Http\Resources\UserRecordResource;
+use App\Model\FeedBack;
 use App\Model\UserRecord;
 use App\Model\WechatUser;
 use App\Utils\ErrorCode;
@@ -85,7 +86,7 @@ class WechatController extends Controller
         $id = $request->input('id', '');
 
         $user = WechatUser::query()->find($id);
-        if($user->name == $name){
+        if ($user->name == $name) {
             return $this->response_json(ErrorCode::SAME_NAME);
         }
 
@@ -149,5 +150,36 @@ class WechatController extends Controller
         $user = $request->user;
         $other_user = $user->record()->orderBy('created_at', 'desc')->paginate(20);
         return UserRecordResource::collection($other_user);
+    }
+
+    public function userFeedBack(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'content' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
+        }
+        $user_id = $request->user->id;
+
+        if (Cache::get($this->_userKey($user_id))){
+            return $this->response_json(ErrorCode::CONTINUITY_FEEDBACK);
+        }
+
+            FeedBack::query()->create([
+                'user_id' => $user_id,
+                'content' => $request->get('content')
+            ]);
+
+        //30分钟后再提交
+        Cache::put($this->_userKey($user_id), 'is_post', 30);
+
+        return $this->response_json(ErrorCode::SUCCESS);
+    }
+
+    protected function _userKey($id)
+    {
+        return 'feed_back' . $id;
     }
 }

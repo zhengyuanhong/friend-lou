@@ -16,6 +16,8 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         //添加其他用户
         Route::post('save_user', 'WechatController@saveOtherUser');
         Route::get('other_user', 'WechatController@otherUser');
+        //意见反馈
+        Route::post('feed_back','WechatController@userFeedBack');
         //创建欠条
         Route::post('create_lou', 'LouController@create');
         //获取正在创建欠条
