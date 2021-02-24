@@ -49,10 +49,13 @@ class LouController extends AdminController
         });
         $grid->column('repayment_at', '还款日期')->display(function ($repayment_at) {
             $res = Lou::diffTime($repayment_at);
-            if ($res == 'overdue') {
-                return "<text style='color: red;'>已逾期{$res['day']}天</text>";
+            if($this->status == Lou::$statusMap['QIAN_LOU_OK']){
+                return "<text style='color: black;'>$repayment_at</text>";
             }
-            return "<text style='color: orange;'>离还款还有{$res['day']}天</text>";
+            if ($res == 'overdue') {
+                return "<text style='color: red;'>【逾期{$res['day']}天】<text style='color: black;'>{$repayment_at}</text></text>";
+            }
+            return "<text style='color: orange;'>【离还款还有{$res['day']}天】<text style='color: black;'>{$repayment_at}</text></text>";
         });
         $grid->column('duration', '还款期限')->display(function ($day) {
             return "<text>{$day}天</text>";
