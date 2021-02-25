@@ -21,7 +21,7 @@
 namespace App\Utils\Wechat;
 
 class OverdueMessage extends Message{
-    public $templateId = 'REHzo2YeIq0h9uGan-tRJ9S6VSDCCUAq-CFUQh1h2vQ';
+    public $template_id = 'REHzo2YeIq0h9uGan-tRJ9S6VSDCCUAq-CFUQh1h2vQ';
     public $touser = '';
     public $page = '';
     public $data = [
