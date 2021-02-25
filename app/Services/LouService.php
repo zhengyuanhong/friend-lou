@@ -1,18 +1,21 @@
 <?php
+
 namespace App\Services;
 
 use App\Model\Lou;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
-class LouService{
-    public function createLou($request,$input,$message){
+class LouService
+{
+    public function createLou($request, $input, $message)
+    {
         $fill_arr = [
             'amount' => $input['amount'],
             'note' => isset($input['note']) ? $input['note'] : "暂无",
             'status' => Lou::$statusMap['CREATING'],
             'creator' => $request->user->id,
-            'repayment_at' => Carbon::now()->addDays($input['duration']),
+            'repayment_at' => Carbon::now()->addDays($input['duration'] + 1),
             'duration' => $input['duration']
         ];
         //借条
