@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\cron;
 
+use App\Jobs\SendTemplateMessage;
 use App\Model\Lou;
 use App\Model\Message;
 use App\Model\WechatUser;
@@ -53,12 +54,13 @@ class RepaymentDueCommand extends Command
                     $dua = Carbon::now()->diffInDays($item->repayment_at);
                     if (Carbon::now()->gt(Carbon::parse($item->repayment_at)) && $dua > 0) {
                         Log::info('逾期' . $dua . '天' . $item);
-                        $this->sendOverdueMsg($item->louQianBelongsToUser, $item, $dua);
+//                        $this->sendOverdueMsg($item->louQianBelongsToUser, $item, $dua);
+                        SendTemplateMessage::dispatch($item->louQianBelongsToUser, $item, $dua,'overdue');
                     } else if ($dua >= 0 && $dua <= 3) {
                         //订阅消息提醒
                         Log::info('还差' . $dua . '到期，订阅消息提醒');
-                        $this->sendRepaymentMessage($item->louQianBelongsToUser, $item);
-
+//                        $this->sendRepaymentMessage($item->louQianBelongsToUser, $item);
+                        SendTemplateMessage::dispatch($item->louQianBelongsToUser, $item,'repayment');
                     }
                 }
             });
