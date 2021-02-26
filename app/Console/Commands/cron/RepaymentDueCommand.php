@@ -56,7 +56,7 @@ class RepaymentDueCommand extends Command
                         Log::info('逾期' . $dua . '天' . $item);
 //                        $this->sendOverdueMsg($item->louQianBelongsToUser, $item, $dua);
                         SendTemplateMessage::dispatch($item->louQianBelongsToUser, $item, $dua, 'overdue');
-                    } else if ($dua >= 0 && $dua <= 3) {
+                    } else if ($dua >= 0 && $dua <= 1) {
                         //订阅消息提醒
                         Log::info('还差' . $dua . '到期，订阅消息提醒');
 //                        $this->sendRepaymentMessage($item->louQianBelongsToUser, $item);
