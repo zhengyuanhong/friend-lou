@@ -126,21 +126,37 @@ class WechatController extends Controller
 
     public function saveOtherUser(Request $request)
     {
-        $other_user_id = $request->get('other_user_id');
-        if (empty($other_user_id)) {
-            return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
-        }
-
-        if (!WechatUser::query()->find($other_user_id)) {
-            return $this->response_json(ErrorCode::USER_IS_NO_EXITS);
-        }
+        $other_user_id = $request->get('other_user_id', '');
+        $other_user_unique = $request->get('unique_id', '');
 
         $user = $request->user;
-        if ($user->id == $other_user_id) {
-            return $this->response_json(ErrorCode::ADD_SAME_USER);
+        if (!empty($other_user_id)) {
+            if (!WechatUser::query()->find($other_user_id)) {
+                Log::info('通过ID查找的用户不存在：' . $other_user_id);
+                return $this->response_json(ErrorCode::USER_IS_NO_EXITS);
+            }
+
+            if ($user->id == $other_user_id) {
+                Log::info('不能通过ID的方式添加自己' . $other_user_id);
+                return $this->response_json(ErrorCode::ADD_SAME_USER);
+            }
+
+            if (!empty($other_user_id)) UserRecord::saveUser($user, $other_user_id);
+
+        } elseif (!empty($other_user_unique)) {
+            if (!$other_user = WechatUser::query()->where('unique_id', $other_user_unique)->first()) {
+                Log::info('通过UniqueID查找的用户不存在：' . $other_user_unique);
+                return $this->response_json(ErrorCode::USER_IS_NO_EXITS);
+            }
+
+            if ($user->id == $other_user->id) {
+                Log::info('不能通过UniqueID的方式添加自己' . $other_user_unique);
+                return $this->response_json(ErrorCode::ADD_SAME_USER);
+            }
+
+            if (!empty($other_user_unique)) UserRecord::saveUser($user, $other_user->id);
         }
 
-        UserRecord::saveUser($user, $other_user_id);
 
         return $this->response_json(ErrorCode::SUCCESS);
     }
@@ -163,14 +179,14 @@ class WechatController extends Controller
         }
         $user_id = $request->user->id;
 
-        if (Cache::get($this->_userKey($user_id))){
+        if (Cache::get($this->_userKey($user_id))) {
             return $this->response_json(ErrorCode::CONTINUITY_FEEDBACK);
         }
 
-            FeedBack::query()->create([
-                'user_id' => $user_id,
-                'content' => $request->get('content')
-            ]);
+        FeedBack::query()->create([
+            'user_id' => $user_id,
+            'content' => $request->get('content')
+        ]);
 
         //30分钟后再提交
         Cache::put($this->_userKey($user_id), 'is_post', 30);
