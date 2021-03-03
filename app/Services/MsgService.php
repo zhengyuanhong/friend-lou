@@ -50,7 +50,7 @@ class MsgService
             'is_read' => Message::$statusMap['no_read']
         ]);
 
-        event(new SendMessage(new NotifyMessage(),$user,$message,$sender->name));
+        \App\Jobs\SendMessage::dispatch(new NotifyMessage(), $user, $message, $sender->name);
     }
 
     public function createTemplateMsg(Lou $lou = null, $type = 'overdue', $overdue = 0)
