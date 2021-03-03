@@ -37,12 +37,12 @@ class LouController extends Controller
         if ($validator->fails()) {
             return $this->response_json(ErrorCode::NO_PARAM_VALIDATE);
         }
-        if (!empty($input['note'])) {
-            $res = MsgCheckUtil::checkRequest($input['note']);
-            if (!$res) {
-                return $this->response_json(ErrorCode::BREAK_RULE_MSG);
-            };
-        }
+//        if (!empty($input['note'])) {
+//            $res = MsgCheckUtil::checkRequest($input['note']);
+//            if (!$res) {
+//                return $this->response_json(ErrorCode::BREAK_RULE_MSG);
+//            };
+//        }
         $data = $louService->createLou($request, $input, $message);
         //TODO 添加延时队列（30分钟后作废）
         return $this->response_json(ErrorCode::SUCCESS, $data);
