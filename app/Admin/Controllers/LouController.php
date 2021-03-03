@@ -29,7 +29,7 @@ class LouController extends AdminController
 
         $grid->column('id', 'ID');
         $grid->column('creditors_user_id', '债权人')->display(function ($id) {
-                return empty($id) ? '暂无' : WechatUser::query()->find($id)->name;
+            return empty($id) ? '暂无' : WechatUser::query()->find($id)->name;
         });
         $grid->column('debts_user_id', '债务人')->display(function ($id) {
             return empty($id) ? '暂无' : WechatUser::query()->find($id)->name;
@@ -49,15 +49,17 @@ class LouController extends AdminController
         });
         $grid->column('repayment_at', '还款日期')->display(function ($repayment_at) {
             $res = Lou::diffTime($repayment_at);
-            if($this->status == Lou::$statusMap['QIAN_LOU_OK'] || $this->staus == Lou::$statusMap['CREATING']){
+            if ($this->status == Lou::$statusMap['QIAN_LOU_OK'] || $this->staus == Lou::$statusMap['CREATING']) {
                 return "<text style='color: black;'>$repayment_at</text>";
-            }elseif ($res['type'] == 'overdue') {
+            }
+
+            if ($res['type'] == 'overdue' || $this->status != Lou::$statusMap['CREATING']) {
                 return "<text style='color: red;'>【逾期{$res['day']}天】<text style='color: black;'>{$repayment_at}</text></text>";
-            }elseif($res['type'] == 'during'){
+            } elseif ($res['type'] == 'during' || $this->status != Lou::$statusMap['CREATING']){
                 return "<text style='color: orange;'>【离还款还有{$res['day']}天】<text style='color: black;'>{$repayment_at}</text></text>";
             }
         });
-        $grid->column('repayment_end_at','最后还款时间');
+        $grid->column('repayment_end_at', '最后还款时间');
         $grid->column('duration', '还款期限')->display(function ($day) {
             return "<text>{$day}天</text>";
         });
