@@ -48,6 +48,7 @@ class Config extends Model
             ['key' => 'mini_app_name', 'value' => '', 'type' => 'index','description'=>'小程序名称'],
             ['key' => 'admire_image', 'value' => '', 'type' => 'index','description'=>'赞赏码图片'],
             ['key' => 'admire_name', 'value' => '', 'type' => 'index','description'=>'赞赏码名称'],
+            ['key' => 'share_image', 'value' => '', 'type' => 'index','description'=>'分享小程序图片'],
         ];
     }
 }

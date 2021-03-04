@@ -32,7 +32,6 @@ class ConfigController extends AdminController
         $grid->column('value', '内容')->editable();
         $grid->column('description', '描述');
 
-        $grid->disableActions();
         return $grid;
     }
 
@@ -64,7 +63,7 @@ class ConfigController extends AdminController
     {
         $form = new Form(new Config());
 
-//        $form->text('type', '类型');
+        $form->text('type', '类型');
         $form->text('key', '关键字');
         $form->text('value', '内容');
         $form->text('description', '描述');

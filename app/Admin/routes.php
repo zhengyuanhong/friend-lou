@@ -19,4 +19,6 @@ Route::group([
     $router->resource('messages', MessageController::class);
     $router->resource('banners', BannerController::class);
     $router->resource('repayment-time-configs', RepaymentConfigController::class);
+    $router->resource('images', ImagesController::class);
+
 });
