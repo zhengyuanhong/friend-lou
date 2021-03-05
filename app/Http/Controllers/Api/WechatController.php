@@ -38,7 +38,7 @@ class WechatController extends Controller
         if (empty($user)) {
             $user = new WechatUser();
             $user->openid = $res['openid'];
-            $user->name = '';
+            $user->name = $this->_makeName();
             $user->save();
             Log::info('创建user数据');
         }
@@ -69,7 +69,7 @@ class WechatController extends Controller
             return $this->response_json(ErrorCode::USER_IS_NO_EXITS);
         }
 
-        if (empty($user->name)) {
+        if ($this->_checkName($user->name)) {
             $user->name = $name;
         }
 
@@ -77,6 +77,23 @@ class WechatController extends Controller
         $user->save();
 
         return $this->response_json(ErrorCode::SUCCESS, $user->toArray());
+    }
+
+    public function _makeName()
+    {
+        return 'HY.' . time();
+    }
+
+    public function _checkName($name)
+    {
+        $arr = explode('.', $name);
+        if (empty($name)) {
+            return true;
+        }
+        if ($arr[0] == 'HY') {
+            return true;
+        }
+        return false;
     }
 
     public function setUserInfo(Request $request)
@@ -164,8 +181,7 @@ class WechatController extends Controller
     public function otherUser(Request $request)
     {
         $user = $request->user;
-        $query = WechatUser::query()->whereNotNull('name')->find($user->id);
-        $other_user = $query->record()->orderBy('created_at', 'desc')->paginate(20);
+        $other_user = $user->record()->orderBy('created_at', 'desc')->paginate(20);
         return UserRecordResource::collection($other_user);
     }
 
