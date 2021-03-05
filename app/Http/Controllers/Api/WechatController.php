@@ -164,7 +164,7 @@ class WechatController extends Controller
     public function otherUser(Request $request)
     {
         $user = $request->user;
-        $other_user = $user->record()->orderBy('created_at', 'desc')->paginate(20);
+        $other_user = $user->record()->whereNotNull('name')->orderBy('created_at', 'desc')->paginate(20);
         return UserRecordResource::collection($other_user);
     }
 
